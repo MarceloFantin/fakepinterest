@@ -1,0 +1,46 @@
+{% extends 'base.html' %}
+
+{% block titulo %}
+        Perfil - {{ usuario }}
+{% endblock %}
+
+
+{%block body %}
+    {% include "navbar.html" %}
+
+    <div class="container">
+        {% if formfoto %}
+
+          <form  method="POST" enctype="multipart/form-data" class="bloco-add-img">
+            {{ formfoto.csrf_token }}
+            <h2>{{ usuario.username }} - Enviar foto</h2>
+
+            <div class="bloco-input-botao">
+              <div class="bloco-arquivo">
+                {{ formfoto.foto(class="botao-arquivo") }}
+              </div>
+              {{ formfoto.botao_confirmacao(class="botao-login", id="foto") }}
+            </div>
+          </form>
+
+        {% else %}
+            <div class="bloco-add-img">
+                <h2>{{ usuario.username }} - Ver Perfil</h2>
+            </div>
+        {% endif %}
+    </div>
+
+    <div class="conteudo">
+    {% for foto in usuario.fotos %}
+        <div class="bloco-imagem">
+          <img src="{{ url_for('static', filename='fotos_posts/{}'.format(foto.imagem)) }}" class="bloco-imagem" >
+        </div>
+    {% endfor %}
+    </div>
+{%endblock%}
+
+
+
+
+
+    
