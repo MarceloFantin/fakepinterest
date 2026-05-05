@@ -10,6 +10,9 @@ import os
 
 app = Flask(__name__)
 
+#para criacao do banco de dados de forma remota
+#app.config['SQLALCHEMY_DATABASE_URI'] = "postgresql://banco_fakepinterest_y9yo_user:2zio2YJGTB76p0WO4YiHGn2TnAymzess@dpg-d7sji5rbc2fs73cqnvpg-a.virginia-postgres.render.com/banco_fakepinterest_y9yo"
+
 app.config['SQLALCHEMY_DATABASE_URI'] = os.getenv("DATABASE_URL")
 #app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///comunidade.db'
 app.config["SECRET_KEY"] = "3tvh17ihwt0vtrXnBuDHQw"
