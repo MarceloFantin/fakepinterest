@@ -18,7 +18,7 @@ class FormLogin(FlaskForm):
     def validate_senha(self, senha):
         usuario = Usuario.query.filter_by(email=self.email.data).first()
         if usuario:
-            if not bcrypt.check_password_hash(usuario.senha, senha.data):
+            if not bcrypt.check_password_hash(usuario.senha.encode("utf-8"), senha.data):
                 raise ValidationError('Senha Incorreta')
 
 
