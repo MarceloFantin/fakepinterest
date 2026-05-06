@@ -1,6 +1,5 @@
 #criar as rotas/links dos site
-import flask_login
-from flask import render_template, url_for, redirect
+from flask import render_template, url_for, redirect, send_from_directory
 from fakepinterest import app, bcrypt, database
 from flask_login import login_required, current_user, login_user, logout_user
 from fakepinterest.forms import FormLogin, FormCriarConta, FormFoto
@@ -33,6 +32,29 @@ def criar_conta():
         login_user(usuario)
         return redirect(url_for('perfil', id_usuario=usuario.id))
     return render_template('criarconta.html', formcriarconta=formcriarconta)
+
+
+@app.route("/upload/<path:filename>", methods=['GET', 'POST'])
+def custom_static(filename):
+    #1 -  para usar essa função tem que colocar o REDER como pago e criar uma pasta fixa fora do projeto como /fotos_posts
+    #2 - no __init__.py tem que mudar a app.config["UPLOAD_FOLDER"] = "static/fotos_posts" para app.config["UPLOAD_FOLDER"] = "/fotos_posts"
+    #3 - e no perfil.html e no feed.html nas linhas que carregam a imagem tem que mudar
+    #de    <img src="{{ url_for('static', filename='fotos_posts/{}'.format(foto.imagem)) }}">
+    #para  <img src="{{ url_for('custom_static', filename='{}'.format(foto.imagem)) }}">
+    #4 - no routes.py a linha
+    #de   - caminho = os.path.join(os.path.abspath(os.path.dirname(__file__)),
+    #                            app.config['UPLOAD_FOLDER'],
+    #                            nome_arquivo)
+    #para - caminho = os.path.join(app.config['UPLOAD_FOLDER'],
+    #                              nome_arquivo)
+    #
+    #isso resolveria o problema de as imagens sumirem quando o render faz um deploy ou algo que cria novamente as pastas
+    #porque as pastas são afemeras e todas as vezes são criadas novamente
+    #da para criar um logica para saber se o projeto esta no ar ou no arquivo local para seguir sempre o caminho
+    #correto tipo criar uma variavel de ambiente no servidor para fazer essa configuração
+    #igual quando pega o banco de dados local ou o que esta na servidor.
+    #isso não será feito pois o plano do RENDER é o free
+    return os.path.join(app.config["UPLOAD_FOLDER"], filename, as_attachement=True)
 
 
 @app.route('/perfil/<int:id_usuario>', methods=['GET', 'POST'])
